@@ -1,0 +1,12 @@
+﻿@model Bank.Models.HomeViewModel
+
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<div>Användare</div>
+@using (Html.BeginForm())
+{
+    @Html.DropDownList("Model.UserName", Model.Users, "Select user");
+    <input type='submit' value='Select' />
+}
