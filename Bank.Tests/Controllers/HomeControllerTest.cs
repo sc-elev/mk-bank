@@ -103,6 +103,7 @@ namespace Bank.Tests.Controllers
 
             Assert.AreEqual("MainMenu", values["action"]);
             Assert.AreEqual("Orvar Slusk", values["UserName"]);
+            Assert.AreEqual(1, values["UserID"]);
         }
     }
 }

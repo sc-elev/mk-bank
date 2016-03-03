@@ -8,5 +8,6 @@ namespace Bank.Models
     public class MainMenuModel
     {
         public string UserName { get; set; }
+        public int UserID { get; set; }
     }
 }

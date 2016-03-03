@@ -35,6 +35,7 @@ namespace Bank.Controllers
             var usernameByIndex =
                 db.GetUsers().ToDictionary(g => g.ID.ToString(), g => g.Name);
             m.UserName =  usernameByIndex[model.UserName];
+            m.UserID = int.Parse(model.UserName);
             return RedirectToAction("MainMenu", new RouteValueDictionary(m));
         }
 
@@ -65,9 +66,11 @@ namespace Bank.Controllers
         }
     }
 
+
     public class BankControllerFactory : DefaultControllerFactory
     {
-        private Dictionary<string, Func<RequestContext, IController>> controllers;
+        private Dictionary<string, Func<RequestContext, IController>>
+            controllers;
 
 
         public BankControllerFactory(IBankDbContext repository)
