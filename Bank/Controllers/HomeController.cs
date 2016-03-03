@@ -12,7 +12,7 @@ namespace Bank.Controllers
 {
     public class HomeController : Controller
     {
-        IBankDbContext db = new BankDbContext();
+        IBankDbContext db;
 
         public ActionResult Index()
         {
@@ -26,7 +26,11 @@ namespace Bank.Controllers
         public ActionResult Index(HomeViewModel model)
         {
             if (model.UserName == null || model.UserName == "0")
-                return View(new HomeViewModel());
+            {
+                var homeViewModel = new HomeViewModel();
+                homeViewModel.SetUserOptions(db);
+                return View("Index", homeViewModel);
+            }
             MainMenuModel m = new MainMenuModel();
             var usernameByIndex =
                 db.GetUsers().ToDictionary(g => g.ID.ToString(), g => g.Name);
