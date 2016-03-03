@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Bank.Database;
+using System.Configuration;
 
 namespace Bank.Controllers
 {
@@ -20,6 +21,7 @@ namespace Bank.Controllers
             return View(model);
         }
 
+
         [HttpPost]
         public ActionResult Index(HomeViewModel model)
         {
@@ -32,10 +34,12 @@ namespace Bank.Controllers
             return RedirectToAction("MainMenu", new RouteValueDictionary(m));
         }
 
+
         public ActionResult MainMenu(MainMenuModel model)
         {
             return View(model);
         }
+
 
         public ActionResult About()
         {
@@ -43,10 +47,48 @@ namespace Bank.Controllers
             return View();
         }
 
+
         public ActionResult Contact()
         {
             ViewBag.Message = "Your contact page.";
             return View();
+        }
+
+
+        public HomeController(IBankDbContext DbCtx)
+        {
+            db = DbCtx;
+        }
+    }
+
+    public class BankControllerFactory : DefaultControllerFactory
+    {
+        private Dictionary<string, Func<RequestContext, IController>> controllers;
+
+
+        public BankControllerFactory(IBankDbContext repository)
+        {
+            controllers =
+                new Dictionary<string, Func<RequestContext, IController>>();
+            controllers["Home"] = controller => new HomeController(repository);
+        }
+
+
+        public override IController
+        CreateController(RequestContext requestContext, string controllerName)
+        {
+            if (! controllers.ContainsKey(controllerName)) return null;
+
+            return controllers[controllerName](requestContext);
+        }
+
+
+        public static IControllerFactory GetControllerFactory()
+        {
+            string typeName = ConfigurationManager.AppSettings["repository"];
+            var type  = Type.GetType(typeName);
+            var repository = Activator.CreateInstance(type);
+            return new BankControllerFactory(repository as IBankDbContext);
         }
     }
 }
