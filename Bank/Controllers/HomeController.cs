@@ -75,7 +75,7 @@ namespace Bank.Controllers
         public ActionResult ListBalance(MainMenuModel model)
         {
             IList<Account> accounts = db.GetAccounts();
-            var found = accounts.Where(a => a.User_ID == model.UserID).ToList();
+            var found = accounts.Where(a => a.ID == model.SelectedAccount).Single();
             return View("ListBalance", found);
         }
 

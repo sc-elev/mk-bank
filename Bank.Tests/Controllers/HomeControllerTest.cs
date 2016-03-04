@@ -150,6 +150,7 @@ namespace Bank.Tests.Controllers
             var mainModel = new MainMenuModel();
             mainModel.UserID = 1;
             mainModel.UserName = "Orvar Slusk";
+            mainModel.SelectedAccount = 1;
 
             var result = controller.ListBalance(mainModel) as ViewResult;
 

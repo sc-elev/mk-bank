@@ -240,6 +240,7 @@
     <Content Include="Views\Home\MainMenu.cshtml" />
     <Content Include="Views\Home\ListAccounts.cshtml" />
     <Content Include="Views\Home\ListBalances.cshtml" />
+    <Content Include="Views\Home\ListBalance.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
