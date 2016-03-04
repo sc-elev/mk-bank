@@ -1,0 +1,32 @@
+﻿@model Bank.Models.MainMenuModel
+
+@{
+    ViewBag.Title = "MainMenu";
+}
+
+<h2>MainMenu</h2>
+
+
+@using (Html.BeginForm("ListAccounts", "Home"))
+{
+    @Html.Hidden("UserName")
+    @Html.Hidden("UserID")
+    <input type='submit' value='List Accounts' />
+}
+
+@using (Html.BeginForm("ListBalances", "Home"))
+{
+    @Html.Hidden("UserName")
+    @Html.Hidden("UserID")
+    <input type='submit' value='List All Balances' />
+}
+
+
+@using (Html.BeginForm("ListBalance", "Home"))
+{
+    @Html.Hidden("UserName")
+    @Html.Hidden("UserID")
+    @Html.DropDownList("SelectedAccount", (SelectList)ViewBag.data);
+    <input type='submit' value='Show Balance' />
+}
+
