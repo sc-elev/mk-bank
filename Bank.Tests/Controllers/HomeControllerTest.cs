@@ -141,5 +141,21 @@ namespace Bank.Tests.Controllers
             var accounts = (result.ViewData.Model as IEnumerable<Account>).ToList();
             Assert.AreEqual(6, accounts.Count);
         }
+
+        [TestMethod]
+        public void TestListBalance()
+        // List all acounts  and their balance for given user.
+        {
+            var controller = new HomeController(new DatabaseMockup());
+            var mainModel = new MainMenuModel();
+            mainModel.UserID = 1;
+            mainModel.UserName = "Orvar Slusk";
+
+            var result = controller.ListBalance(mainModel) as ViewResult;
+
+            Assert.AreEqual("ListBalance", result.ViewName);
+            Assert.IsNotNull(result.ViewData.Model);
+            Assert.IsNotNull(result.ViewData.Model as Account);
+        }
     }
 }

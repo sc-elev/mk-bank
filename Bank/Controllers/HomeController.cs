@@ -14,6 +14,7 @@ namespace Bank.Controllers
     {
         IBankDbContext db;
 
+
         public ActionResult Index()
         {
             var model = new HomeViewModel();
@@ -34,14 +35,20 @@ namespace Bank.Controllers
             MainMenuModel m = new MainMenuModel();
             var usernameByIndex =
                 db.GetUsers().ToDictionary(g => g.ID.ToString(), g => g.Name);
-            m.UserName =  usernameByIndex[model.UserName];
+            m.UserName = usernameByIndex[model.UserName];
             m.UserID = int.Parse(model.UserName);
+            var dict = db.GetAccounts().ToDictionary(g => g.ID, g => g.Name);
+            var AccountNames = new SelectList(dict, "key", "value");
+            ViewBag.data = AccountNames;
             return RedirectToAction("MainMenu", "", m);
         }
 
 
         public ActionResult MainMenu(MainMenuModel model)
         {
+            var dict = db.GetAccounts().ToDictionary(g => g.ID, g => g.Name);
+            var AccountNames = new SelectList(dict, "key", "value");
+            ViewBag.data = AccountNames;
             return View("MainMenu", "", model);
         }
 
@@ -54,6 +61,7 @@ namespace Bank.Controllers
             return View("ListAccounts", found);
         }
 
+
         [HttpPost]
         public ActionResult ListBalances(MainMenuModel model)
         {
@@ -62,6 +70,14 @@ namespace Bank.Controllers
             return View("ListBalances", found);
         }
 
+
+        [HttpPost]
+        public ActionResult ListBalance(MainMenuModel model)
+        {
+            IList<Account> accounts = db.GetAccounts();
+            var found = accounts.Where(a => a.User_ID == model.UserID).ToList();
+            return View("ListBalance", found);
+        }
 
 
         public ActionResult About()
