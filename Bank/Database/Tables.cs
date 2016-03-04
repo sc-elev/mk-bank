@@ -29,6 +29,8 @@ namespace Bank.Database
         [Key]
         public int ID { get; set; }
 
+        public int User_ID { get; set; }
+
         public string Name { get; set; }
 
         public decimal Balance { get; set; }
@@ -131,7 +133,7 @@ namespace Bank.Database
 
         public IList<User> GetUsers()
         {
-            return new List<User> {
+            var userList = new List<User> {
                 new User {ID = 1, Name = "Orvar Slusk",
                           Accounts = new List<Account> {
                               accounts[0], accounts[1], accounts[4],
@@ -142,6 +144,9 @@ namespace Bank.Database
                          Accounts = new List<Account> { accounts[2], accounts[3] }
                 }
             };
+            foreach (var account in userList[0].Accounts) { account.User_ID = 1; };
+            foreach (var account in userList[1].Accounts) { account.User_ID = 2; };
+            return userList;
         }
 
 

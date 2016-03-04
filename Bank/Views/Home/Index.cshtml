@@ -7,6 +7,6 @@
 <div>Användare</div>
 @using (Html.BeginForm())
 {
-    @Html.DropDownList("0", Model.Users, "Select user");
+    @Html.DropDownList("UserName", Model.Users);
     <input type='submit' value='Select' />
 }

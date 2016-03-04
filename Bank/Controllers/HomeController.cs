@@ -36,13 +36,22 @@ namespace Bank.Controllers
                 db.GetUsers().ToDictionary(g => g.ID.ToString(), g => g.Name);
             m.UserName =  usernameByIndex[model.UserName];
             m.UserID = int.Parse(model.UserName);
-            return RedirectToAction("MainMenu", new RouteValueDictionary(m));
+            return RedirectToAction("MainMenu", "", m);
         }
 
 
         public ActionResult MainMenu(MainMenuModel model)
         {
-            return View(model);
+            return View("MainMenu", "", model);
+        }
+
+
+        [HttpPost]
+        public ActionResult ListAccounts(MainMenuModel model)
+        {
+            IList<Account> accounts = db.GetAccounts();
+            var found = accounts.Where(a => a.User_ID == model.UserID).ToList();
+            return View("ListAccounts", found);
         }
 
 

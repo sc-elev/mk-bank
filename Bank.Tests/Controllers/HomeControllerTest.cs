@@ -105,5 +105,23 @@ namespace Bank.Tests.Controllers
             Assert.AreEqual("Orvar Slusk", values["UserName"]);
             Assert.AreEqual(1, values["UserID"]);
         }
+
+        [TestMethod]
+        public void TestListAccounts()
+        // List all acounts for given user.
+        {
+            var controller = new HomeController(new DatabaseMockup());
+            var mainModel = new MainMenuModel();
+            mainModel.UserID = 1;
+            mainModel.UserName = "Orvar Slusk";
+
+            var result = controller.ListAccounts(mainModel) as ViewResult;
+
+            Assert.AreEqual("ListAccounts", result.ViewName);
+            Assert.IsNotNull(result.ViewData.Model);
+            Assert.IsNotNull(result.ViewData.Model as IEnumerable<Account>);
+            var accounts = (result.ViewData.Model as IEnumerable<Account>).ToList();
+            Assert.AreEqual(6, accounts.Count);
+        }
     }
 }

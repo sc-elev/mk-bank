@@ -1,0 +1,28 @@
+﻿@model IEnumerable<Bank.Database.Account>
+
+@{
+    ViewBag.Title = "ListAccounts";
+}
+
+<h2>ListAccounts</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+    </tr>
+}
+
+</table>

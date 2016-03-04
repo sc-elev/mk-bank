@@ -167,9 +167,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201603030952188_v2.cs" />
-    <Compile Include="Migrations\201603030952188_v2.Designer.cs">
-      <DependentUpon>201603030952188_v2.cs</DependentUpon>
+    <Compile Include="Migrations\201603032240518_v4.cs" />
+    <Compile Include="Migrations\201603032240518_v4.Designer.cs">
+      <DependentUpon>201603032240518_v4.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -236,6 +236,8 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Home\MainMenu.cshtml" />
+    <Content Include="Views\Home\ListAccounts.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -248,8 +250,8 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201603030952188_v2.resx">
-      <DependentUpon>201603030952188_v2.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201603032240518_v4.resx">
+      <DependentUpon>201603032240518_v4.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
