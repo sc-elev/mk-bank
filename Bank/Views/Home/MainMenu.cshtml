@@ -49,3 +49,23 @@
         </tr>
     </table>
 }
+
+@using (Html.BeginForm("Withdraw", "Home"))
+{
+    @Html.Hidden("UserName")
+    @Html.Hidden("UserID")
+    @Html.DropDownList("SelectedAccount", (SelectList)ViewBag.data);
+    <table>
+        <tr>
+            <td>
+                Amount:
+            </td>
+            <td>
+                <input type="number" id="Amount" name="Amount" value="0" />
+            </td>
+            <td>
+                <input type='submit' value='Withdraw' />
+            </td>
+        </tr>
+    </table>
+}

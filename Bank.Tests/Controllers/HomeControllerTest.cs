@@ -158,5 +158,48 @@ namespace Bank.Tests.Controllers
             Assert.IsNotNull(result.ViewData.Model);
             Assert.IsNotNull(result.ViewData.Model as Account);
         }
+
+
+        [TestMethod]
+        public void TestAddMoney()
+        // List all acounts  and their balance for given user.
+        {
+            var db = new DatabaseMockup();
+            var controller = new HomeController(db);
+            var model = new MainMenuModel();
+            model.UserID = 1;
+            model.UserName = "Orvar Slusk";
+            model.SelectedAccount = 1;
+            model.Amount = 12;
+            var before = db.GetAccounts()[1].Balance;
+
+            var result = controller.AddMoney(model) as ViewResult;
+
+            Assert.AreEqual("AddMoney", result.ViewName);
+            Assert.IsNotNull(result.ViewData.Model);
+            Assert.IsNotNull(result.ViewData.Model as Account);
+            Assert.AreEqual(before + 12, db.GetAccounts()[1].Balance);
+        }
+
+        [TestMethod]
+        public void TestWithdraw()
+        // List all acounts  and their balance for given user.
+        {
+            var db = new DatabaseMockup();
+            var controller = new HomeController(db);
+            var model = new MainMenuModel();
+            model.UserID = 1;
+            model.UserName = "Orvar Slusk";
+            model.SelectedAccount = 1;
+            model.Amount = 12;
+            var before = db.GetAccounts()[1].Balance;
+
+            var result = controller.Withdraw(model) as ViewResult;
+
+            Assert.AreEqual("Withdraw", result.ViewName);
+            Assert.IsNotNull(result.ViewData.Model);
+            Assert.IsNotNull(result.ViewData.Model as Account);
+            Assert.AreEqual(before - 12, db.GetAccounts()[1].Balance);
+        }
     }
 }

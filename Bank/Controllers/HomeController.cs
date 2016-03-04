@@ -80,6 +80,23 @@ namespace Bank.Controllers
         }
 
 
+        [HttpPost]
+        public ActionResult AddMoney(MainMenuModel model)
+        {
+            IList<Account> accounts = db.GetAccounts();
+            var found = accounts.Where(a => a.ID == model.SelectedAccount).Single();
+            return View("ListBalance", found);
+        }
+
+
+        [HttpPost]
+        public ActionResult Withdraw(MainMenuModel model)
+        {
+            IList<Account> accounts = db.GetAccounts();
+            var found = accounts.Where(a => a.ID == model.SelectedAccount).Single();
+            return View("ListBalance", found);
+        }
+
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";
