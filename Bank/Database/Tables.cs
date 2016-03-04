@@ -51,6 +51,8 @@ namespace Bank.Database
         [Key]
         public int ID { get; set; }
 
+        public int Account_ID { get; set; }
+
         public string Note { get; set; }
 
         public Account From { get; set; }
@@ -150,7 +152,16 @@ namespace Bank.Database
         }
 
 
-        public IList<Account> GetAccounts() { return accounts; }
+        public IList<Account> GetAccounts()
+        {
+            foreach (var a in accounts)
+            {
+                a.Transactions = transactions
+                        .Where(t => (t.From.ID == a.ID || t.To.ID == a.ID))
+                        .ToList();
+            }
+            return accounts;
+        }
 
         public IList<Transaction> GetTransactions() { return transactions; }
 

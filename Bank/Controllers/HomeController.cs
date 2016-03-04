@@ -75,8 +75,19 @@ namespace Bank.Controllers
         public ActionResult ListBalance(MainMenuModel model)
         {
             IList<Account> accounts = db.GetAccounts();
-            var found = accounts.Where(a => a.ID == model.SelectedAccount).Single();
+            var found =
+                accounts.Where(a => a.ID == model.SelectedAccount).Single();
             return View("ListBalance", found);
+        }
+
+
+        [HttpPost]
+        public ActionResult ListTransactions(MainMenuModel model)
+        {
+            IList<Account> accounts = db.GetAccounts();
+            Account acc  =
+                accounts.Where(a => a.ID == model.SelectedAccount).Single();
+            return View("XListTransactions", acc.Transactions);
         }
 
 
@@ -84,7 +95,8 @@ namespace Bank.Controllers
         public ActionResult AddMoney(MainMenuModel model)
         {
             IList<Account> accounts = db.GetAccounts();
-            var found = accounts.Where(a => a.ID == model.SelectedAccount).Single();
+            var found =
+                accounts.Where(a => a.ID == model.SelectedAccount).Single();
             return View("ListBalance", found);
         }
 
@@ -96,6 +108,25 @@ namespace Bank.Controllers
             var found = accounts.Where(a => a.ID == model.SelectedAccount).Single();
             return View("ListBalance", found);
         }
+
+
+        [HttpPost]
+        public ActionResult Transfer(MainMenuModel model)
+        {
+            IList<Account> accounts = db.GetAccounts();
+            var found = accounts.Where(a => a.ID == model.SelectedAccount).Single();
+            return View("ListBalance", found);
+        }
+
+
+        [HttpPost]
+        public ActionResult Lock(MainMenuModel model)
+        {
+            IList<Account> accounts = db.GetAccounts();
+            var found = accounts.Where(a => a.ID == model.SelectedAccount).Single();
+            return View("MainMenu", found);
+        }
+
 
         public ActionResult About()
         {

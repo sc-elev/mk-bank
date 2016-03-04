@@ -30,22 +30,31 @@
     <input type='submit' value='Show Balance' />
 }
 
+
+@using (Html.BeginForm("ListTransactions", "Home"))
+{
+    @Html.Hidden("UserName")
+    @Html.Hidden("UserID")
+    @Html.DropDownList("SelectedAccount", (SelectList)ViewBag.data)
+    <input type='submit' value='ListTransactions' />
+}
+
+
 @using (Html.BeginForm("AddMoney", "Home"))
 {
     @Html.Hidden("UserName")
     @Html.Hidden("UserID")
-    @Html.DropDownList("SelectedAccount", (SelectList)ViewBag.data);
+    ;
     <table>
         <tr>
             <td>
-                Amount:
+                @Html.DropDownList("SelectedAccount", (SelectList)ViewBag.data)
             </td>
+            <td>  Amount: </td>
             <td>
                 <input type="number" id="Amount" name="Amount" value="0" />
             </td>
-            <td>
-                <input type='submit' value='Withdraw' />
-            </td>
+            <td> <input type='submit' value='Add Money' /> </td>
         </tr>
     </table>
 }
@@ -54,18 +63,54 @@
 {
     @Html.Hidden("UserName")
     @Html.Hidden("UserID")
-    @Html.DropDownList("SelectedAccount", (SelectList)ViewBag.data);
     <table>
         <tr>
+            <td>
+                @Html.DropDownList("SelectedAccount", (SelectList)ViewBag.data);
+            </td>
             <td>
                 Amount:
             </td>
             <td>
                 <input type="number" id="Amount" name="Amount" value="0" />
             </td>
+            <td> <input type='submit' value='Withdraw' /> </td>
+        </tr>
+    </table>
+}
+@using (Html.BeginForm("Transfer", "Home"))
+{
+    @Html.Hidden("UserName")
+    @Html.Hidden("UserID")
+    <table>
+        <tr>
+            <td> Amount: </td>
             <td>
-                <input type='submit' value='Withdraw' />
+                <input type="number" id="Amount" name="Amount" value="0" />
             </td>
+            <td> From </td>
+            <td>
+                @Html.DropDownList("FromAccount", (SelectList)ViewBag.data);
+            </td>
+            <td> To: </td>
+            <td>
+                @Html.DropDownList("ToAccount", (SelectList)ViewBag.data);
+            </td>
+            <td> <input type='submit' value='Transfer' /> </td>
+        </tr>
+    </table>
+}
+@using (Html.BeginForm("Lock", "Home"))
+{
+    @Html.Hidden("UserName")
+    @Html.Hidden("UserID")
+    ;
+    <table>
+        <tr>
+            <td>
+                @Html.DropDownList("SelectedAccount", (SelectList)ViewBag.data)
+            </td>
+            <td>  <input type='submit' value='Lock' /> </td>
         </tr>
     </table>
 }

@@ -142,22 +142,7 @@ namespace Bank.Tests.Controllers
             Assert.AreEqual(6, accounts.Count);
         }
 
-        [TestMethod]
-        public void TestListBalance()
-        // List all acounts  and their balance for given user.
-        {
-            var controller = new HomeController(new DatabaseMockup());
-            var mainModel = new MainMenuModel();
-            mainModel.UserID = 1;
-            mainModel.UserName = "Orvar Slusk";
-            mainModel.SelectedAccount = 1;
 
-            var result = controller.ListBalance(mainModel) as ViewResult;
-
-            Assert.AreEqual("ListBalance", result.ViewName);
-            Assert.IsNotNull(result.ViewData.Model);
-            Assert.IsNotNull(result.ViewData.Model as Account);
-        }
 
 
         [TestMethod]
@@ -181,6 +166,25 @@ namespace Bank.Tests.Controllers
             Assert.AreEqual(before + 12, db.GetAccounts()[1].Balance);
         }
 
+
+        [TestMethod]
+        public void TestListTransactions()
+        // List all transactions for given account.
+        {
+            var controller = new HomeController(new DatabaseMockup());
+            var mainModel = new MainMenuModel();
+            mainModel.UserID = 1;
+            mainModel.UserName = "Orvar Slusk";
+            mainModel.SelectedAccount = 1;
+
+            var result = controller.ListTransactions(mainModel) as ViewResult;
+
+            Assert.AreEqual("ListTransactions", result.ViewName);
+            Assert.IsNotNull(result.ViewData.Model);
+            Assert.IsNotNull(result.ViewData.Model as IEnumerable<Transaction>);
+        }
+
+
         [TestMethod]
         public void TestWithdraw()
         // List all acounts  and their balance for given user.
@@ -201,5 +205,48 @@ namespace Bank.Tests.Controllers
             Assert.IsNotNull(result.ViewData.Model as Account);
             Assert.AreEqual(before - 12, db.GetAccounts()[1].Balance);
         }
+
+
+        [TestMethod]
+        public void TestTransfer()
+        // List all acounts  and their balance for given user.
+        {
+            var db = new DatabaseMockup();
+            var controller = new HomeController(db);
+            var model = new MainMenuModel();
+            model.UserID = 1;
+            model.UserName = "Orvar Slusk";
+            model.FromAccount = 1;
+            model.ToAccount = 4;
+            model.Amount = 12;
+            var srcBefore = db.GetAccounts()[1].Balance;
+            var destBefore = db.GetAccounts()[4].Balance;
+
+            var result = controller.Transfer(model) as ViewResult;
+
+            Assert.AreEqual("Transfer", result.ViewName);
+            Assert.IsNotNull(result.ViewData.Model);
+            Assert.AreEqual(srcBefore - 12, db.GetAccounts()[1].Balance);
+            Assert.AreEqual(destBefore + 12, db.GetAccounts()[4].Balance);
+        }
+
+
+        [TestMethod]
+        public void TestLock()
+        // List all acounts  and their balance for given user.
+        {
+            var db = new DatabaseMockup();
+            var controller = new HomeController(db);
+            var model = new MainMenuModel();
+            model.UserID = 1;
+            model.UserName = "Orvar Slusk";
+            model.SelectedAccount = 1;
+
+            var result = controller.Lock(model) as ViewResult;
+
+            Assert.AreEqual("MainMenu", result.ViewName);
+            Assert.IsTrue(db.GetAccounts()[1].Locked);
+        }
     }
+
 }

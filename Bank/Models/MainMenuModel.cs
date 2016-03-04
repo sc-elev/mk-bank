@@ -16,9 +16,12 @@ namespace Bank.Models
 
         public int UserID { get; set; }
 
-        public int SelectedAccount { get; set;  }
+        public int SelectedAccount { get; set; }
 
-        public int Amount { get; set;  }
+        public int FromAccount { get; set; }
 
+        public int ToAccount { get; set; }
+
+        public int Amount { get; set; }
     }
 }
