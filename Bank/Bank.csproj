@@ -241,6 +241,7 @@
     <Content Include="Views\Home\ListAccounts.cshtml" />
     <Content Include="Views\Home\ListBalances.cshtml" />
     <Content Include="Views\Home\ListBalance.cshtml" />
+    <Content Include="Views\Home\ListTransactions.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
