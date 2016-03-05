@@ -96,9 +96,15 @@ namespace Bank.Controllers
         public ActionResult AddMoney(MainMenuModel model)
         {
             IList<Account> accounts = db.GetAccounts();
-            var found =
+            var account =
                 accounts.Where(a => a.ID == model.SelectedAccount).Single();
-            return View("ListBalance", found);
+            Transaction t = new Transaction();
+            t.From = accounts[0];
+            t.To = account;
+            t.Amount = model.Amount;
+            t.Note = "Manual insert";
+            db.GetTransactions().Add(t);
+            return RedirectToAction("MainMenu", model);
         }
 
 

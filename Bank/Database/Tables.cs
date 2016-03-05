@@ -159,9 +159,15 @@ namespace Bank.Database
                 a.Transactions = transactions
                         .Where(t => (t.From.ID == a.ID || t.To.ID == a.ID))
                         .ToList();
+                a.Balance = 0;
+                foreach (var t in a.Transactions)
+                {
+                    a.Balance += t.To.ID == a.ID ? t.Amount : -t.Amount;
+                }
             }
             return accounts;
         }
+
 
         public IList<Transaction> GetTransactions() { return transactions; }
 

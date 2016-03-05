@@ -154,16 +154,20 @@ namespace Bank.Tests.Controllers
             var model = new MainMenuModel();
             model.UserID = 1;
             model.UserName = "Orvar Slusk";
-            model.SelectedAccount = 1;
+            model.SelectedAccount = 4;
             model.Amount = 12;
-            var before = db.GetAccounts()[1].Balance;
+            var account = db.GetAccounts()
+                .Where(a => a.ID == model.SelectedAccount)
+                .Single();
+            var before = account.Balance;
 
-            var result = controller.AddMoney(model) as ViewResult;
+            var result = controller.AddMoney(model) as RedirectToRouteResult;
 
-            Assert.AreEqual("AddMoney", result.ViewName);
-            Assert.IsNotNull(result.ViewData.Model);
-            Assert.IsNotNull(result.ViewData.Model as Account);
-            Assert.AreEqual(before + 12, db.GetAccounts()[1].Balance);
+            Assert.AreEqual("", result.RouteName);
+            account = db.GetAccounts()
+                .Where(a => a.ID == model.SelectedAccount)
+                .Single();
+            Assert.AreEqual(before + 12, account.Balance);
         }
 
 
