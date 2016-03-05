@@ -242,10 +242,11 @@ namespace Bank.Tests.Controllers
             model.UserName = "Orvar Slusk";
             model.SelectedAccount = 1;
 
-            var result = controller.Lock(model) as ViewResult;
+            var result = controller.Lock(model) as RedirectToRouteResult;
 
-            Assert.AreEqual("MainMenu", result.ViewName);
-            Assert.IsTrue(db.GetAccounts()[1].Locked);
+            Assert.AreEqual("", result.RouteName);
+            var account = db.GetAccounts().Where(a => a.ID == 1).Single();
+            Assert.IsTrue(account.Locked);
         }
     }
 

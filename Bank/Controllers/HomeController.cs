@@ -44,6 +44,7 @@ namespace Bank.Controllers
         }
 
 
+
         public ActionResult MainMenu(MainMenuModel model)
         {
             var dict = db.GetAccounts().ToDictionary(g => g.ID, g => g.Name);
@@ -124,7 +125,8 @@ namespace Bank.Controllers
         {
             IList<Account> accounts = db.GetAccounts();
             var found = accounts.Where(a => a.ID == model.SelectedAccount).Single();
-            return View("MainMenu", found);
+            found.Locked = true;
+            return RedirectToAction("MainMenu", model);
         }
 
 
