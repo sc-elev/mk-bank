@@ -85,9 +85,9 @@ namespace Bank.Controllers
         public ActionResult ListTransactions(MainMenuModel model)
         {
             IList<Account> accounts = db.GetAccounts();
-            Account acc  =
+            Account account  =
                 accounts.Where(a => a.ID == model.SelectedAccount).Single();
-            return View("XListTransactions", acc.Transactions);
+            return View("ListTransactions", account.Transactions);
         }
 
 
