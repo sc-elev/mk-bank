@@ -13,6 +13,15 @@ namespace Bank.Tests.Controllers
     [TestClass]
     public class HomeControllerTest
     {
+
+        protected Account AccountById(IBankDbContext db, int ID)
+        {
+            return  db.GetAccounts()
+                .Where(a => a.ID == ID)
+                .Single();
+        }
+
+
         [TestMethod]
         public void Index()
         {
@@ -106,6 +115,7 @@ namespace Bank.Tests.Controllers
             Assert.AreEqual(1, values["UserID"]);
         }
 
+
         [TestMethod]
         public void TestListAccounts()
         // List all acounts for given user.
@@ -124,6 +134,7 @@ namespace Bank.Tests.Controllers
             Assert.AreEqual(6, accounts.Count);
         }
 
+
         [TestMethod]
         public void TestListBalances()
         // List all acounts  and their balance for given user.
@@ -141,8 +152,6 @@ namespace Bank.Tests.Controllers
             var accounts = (result.ViewData.Model as IEnumerable<Account>).ToList();
             Assert.AreEqual(6, accounts.Count);
         }
-
-
 
 
         [TestMethod]
@@ -218,7 +227,7 @@ namespace Bank.Tests.Controllers
 
         [TestMethod]
         public void TestTransfer()
-        // List all acounts  and their balance for given user.
+        // Transfer amount between two accounts.
         {
             var db = new DatabaseMockup();
             var controller = new HomeController(db);
@@ -228,21 +237,20 @@ namespace Bank.Tests.Controllers
             model.FromAccount = 1;
             model.ToAccount = 4;
             model.Amount = 12;
-            var srcBefore = db.GetAccounts()[1].Balance;
-            var destBefore = db.GetAccounts()[4].Balance;
+            var srcBefore = AccountById(db, 1).Balance;
+            var destBefore = AccountById(db, 4).Balance;
 
-            var result = controller.Transfer(model) as ViewResult;
+            var result = controller.Transfer(model) as RedirectToRouteResult;
 
-            Assert.AreEqual("Transfer", result.ViewName);
-            Assert.IsNotNull(result.ViewData.Model);
-            Assert.AreEqual(srcBefore - 12, db.GetAccounts()[1].Balance);
-            Assert.AreEqual(destBefore + 12, db.GetAccounts()[4].Balance);
+            Assert.AreEqual("", result.RouteName);
+            Assert.AreEqual(srcBefore - 12, AccountById(db, 1).Balance);
+            Assert.AreEqual(destBefore + 12, AccountById(db, 4).Balance);
         }
 
 
         [TestMethod]
         public void TestLock()
-        // List all acounts  and their balance for given user.
+        // Test "Lock for Withdrawal" function
         {
             var db = new DatabaseMockup();
             var controller = new HomeController(db);

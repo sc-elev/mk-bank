@@ -127,9 +127,15 @@ namespace Bank.Controllers
         [HttpPost]
         public ActionResult Transfer(MainMenuModel model)
         {
-            IList<Account> accounts = db.GetAccounts();
-            var found = accounts.Where(a => a.ID == model.SelectedAccount).Single();
-            return View("ListBalance", found);
+            Transaction t = new Transaction();
+            t.To =
+                db.GetAccounts().Where(a => a.ID == model.ToAccount).Single();
+            t.From =
+                db.GetAccounts().Where(a => a.ID == model.FromAccount).Single();
+            t.Amount = model.Amount;
+            t.Note = "Web Transfer";
+            db.GetTransactions().Add(t);
+            return RedirectToAction("MainMenu", model);
         }
 
 
