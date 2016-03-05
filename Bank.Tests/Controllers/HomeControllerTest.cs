@@ -21,6 +21,15 @@ namespace Bank.Tests.Controllers
                 .Single();
         }
 
+        protected MainMenuModel BuildMainMenuModel(int ID = 1,
+                                                    string Name = "Orvar Slusk")
+        {
+            MainMenuModel m = new MainMenuModel();
+            m.UserID = ID;
+            m.UserName = Name;
+            return m;
+        }
+
 
         [TestMethod]
         public void Index()
@@ -121,11 +130,9 @@ namespace Bank.Tests.Controllers
         // List all acounts for given user.
         {
             var controller = new HomeController(new DatabaseMockup());
-            var mainModel = new MainMenuModel();
-            mainModel.UserID = 1;
-            mainModel.UserName = "Orvar Slusk";
+            var model = BuildMainMenuModel();
 
-            var result = controller.ListAccounts(mainModel) as ViewResult;
+            var result = controller.ListAccounts(model) as ViewResult;
 
             Assert.AreEqual("ListAccounts", result.ViewName);
             Assert.IsNotNull(result.ViewData.Model);
@@ -140,11 +147,9 @@ namespace Bank.Tests.Controllers
         // List all acounts  and their balance for given user.
         {
             var controller = new HomeController(new DatabaseMockup());
-            var mainModel = new MainMenuModel();
-            mainModel.UserID = 1;
-            mainModel.UserName = "Orvar Slusk";
+            var model = BuildMainMenuModel();
 
-            var result = controller.ListBalances(mainModel) as ViewResult;
+            var result = controller.ListBalances(model) as ViewResult;
 
             Assert.AreEqual("ListBalances", result.ViewName);
             Assert.IsNotNull(result.ViewData.Model);
@@ -160,23 +165,16 @@ namespace Bank.Tests.Controllers
         {
             var db = new DatabaseMockup();
             var controller = new HomeController(db);
-            var model = new MainMenuModel();
-            model.UserID = 1;
-            model.UserName = "Orvar Slusk";
+            var model = BuildMainMenuModel();
             model.SelectedAccount = 4;
             model.Amount = 12;
-            var account = db.GetAccounts()
-                .Where(a => a.ID == model.SelectedAccount)
-                .Single();
-            var before = account.Balance;
+            var before = AccountById(db, model.SelectedAccount).Balance;
 
             var result = controller.AddMoney(model) as RedirectToRouteResult;
 
             Assert.AreEqual("", result.RouteName);
-            account = db.GetAccounts()
-                .Where(a => a.ID == model.SelectedAccount)
-                .Single();
-            Assert.AreEqual(before + 12, account.Balance);
+            var after = AccountById(db, 4).Balance;
+            Assert.AreEqual(before + 12, after);
         }
 
 
@@ -185,12 +183,10 @@ namespace Bank.Tests.Controllers
         // List all transactions for given account.
         {
             var controller = new HomeController(new DatabaseMockup());
-            var mainModel = new MainMenuModel();
-            mainModel.UserID = 1;
-            mainModel.UserName = "Orvar Slusk";
-            mainModel.SelectedAccount = 1;
+            var model = BuildMainMenuModel();
+            model.SelectedAccount = 1;
 
-            var result = controller.ListTransactions(mainModel) as ViewResult;
+            var result = controller.ListTransactions(model) as ViewResult;
 
             Assert.AreEqual("ListTransactions", result.ViewName);
             Assert.IsNotNull(result.ViewData.Model);
@@ -204,23 +200,15 @@ namespace Bank.Tests.Controllers
         {
             var db = new DatabaseMockup();
             var controller = new HomeController(db);
-            var model = new MainMenuModel();
-            model.UserID = 1;
-            model.UserName = "Orvar Slusk";
+            var model = BuildMainMenuModel();
             model.SelectedAccount = 4;
             model.Amount = 12;
-            var before = db.GetAccounts()
-                .Where(a => a.ID == model.SelectedAccount)
-                .Single()
-                .Balance;
+            var before = AccountById(db, model.SelectedAccount).Balance;
 
             var result = controller.Withdraw(model) as RedirectToRouteResult;
 
             Assert.AreEqual("", result.RouteName);
-            var after = db.GetAccounts()
-                .Where(a => a.ID == model.SelectedAccount)
-                .Single()
-                .Balance;
+            var after = AccountById(db, model.SelectedAccount).Balance;
             Assert.AreEqual(before - 12, after);
         }
 
@@ -231,9 +219,7 @@ namespace Bank.Tests.Controllers
         {
             var db = new DatabaseMockup();
             var controller = new HomeController(db);
-            var model = new MainMenuModel();
-            model.UserID = 1;
-            model.UserName = "Orvar Slusk";
+            var model = BuildMainMenuModel();
             model.FromAccount = 1;
             model.ToAccount = 4;
             model.Amount = 12;
@@ -266,5 +252,4 @@ namespace Bank.Tests.Controllers
             Assert.IsTrue(account.Locked);
         }
     }
-
 }
