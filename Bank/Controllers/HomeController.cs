@@ -112,8 +112,15 @@ namespace Bank.Controllers
         public ActionResult Withdraw(MainMenuModel model)
         {
             IList<Account> accounts = db.GetAccounts();
-            var found = accounts.Where(a => a.ID == model.SelectedAccount).Single();
-            return View("ListBalance", found);
+            var account =
+                accounts.Where(a => a.ID == model.SelectedAccount).Single();
+            Transaction t = new Transaction();
+            t.From = account;
+            t.To = accounts[0];
+            t.Amount = model.Amount;
+            t.Note = "Manual withdrawal";
+            db.GetTransactions().Add(t);
+            return RedirectToAction("MainMenu", model);
         }
 
 

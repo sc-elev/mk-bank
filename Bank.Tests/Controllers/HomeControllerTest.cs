@@ -198,16 +198,21 @@ namespace Bank.Tests.Controllers
             var model = new MainMenuModel();
             model.UserID = 1;
             model.UserName = "Orvar Slusk";
-            model.SelectedAccount = 1;
+            model.SelectedAccount = 4;
             model.Amount = 12;
-            var before = db.GetAccounts()[1].Balance;
+            var before = db.GetAccounts()
+                .Where(a => a.ID == model.SelectedAccount)
+                .Single()
+                .Balance;
 
-            var result = controller.Withdraw(model) as ViewResult;
+            var result = controller.Withdraw(model) as RedirectToRouteResult;
 
-            Assert.AreEqual("Withdraw", result.ViewName);
-            Assert.IsNotNull(result.ViewData.Model);
-            Assert.IsNotNull(result.ViewData.Model as Account);
-            Assert.AreEqual(before - 12, db.GetAccounts()[1].Balance);
+            Assert.AreEqual("", result.RouteName);
+            var after = db.GetAccounts()
+                .Where(a => a.ID == model.SelectedAccount)
+                .Single()
+                .Balance;
+            Assert.AreEqual(before - 12, after);
         }
 
 
