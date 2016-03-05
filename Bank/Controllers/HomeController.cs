@@ -14,6 +14,21 @@ namespace Bank.Controllers
     {
         IBankDbContext db;
 
+        protected Account AccountById(IBankDbContext db, int ID)
+        {
+            return db.GetAccounts().Where(a => a.ID == ID).Single();
+        }
+
+        protected IList<Account> AccountsByUser(int UserID)
+        {
+            return db.GetAccounts().Where(a => a.User_ID == UserID).ToList();
+        }
+
+        protected SelectList AccountNamesSelectList(IBankDbContext db)
+        {
+            var dict = db.GetAccounts().ToDictionary(g => g.ID, g => g.Name);
+            return new SelectList(dict, "key", "value");
+        }
 
         public ActionResult Index()
         {
@@ -33,23 +48,19 @@ namespace Bank.Controllers
                 return View("Index", homeViewModel);
             }
             MainMenuModel m = new MainMenuModel();
-            var usernameByIndex =
-                db.GetUsers().ToDictionary(g => g.ID.ToString(), g => g.Name);
-            m.UserName = usernameByIndex[model.UserName];
+            m.UserName = db.GetUsers()
+                .Where(u => u.ID.ToString() == model.UserName)
+                .Single()
+                .Name;
             m.UserID = int.Parse(model.UserName);
-            var dict = db.GetAccounts().ToDictionary(g => g.ID, g => g.Name);
-            var AccountNames = new SelectList(dict, "key", "value");
-            ViewBag.data = AccountNames;
+            ViewBag.data = AccountNamesSelectList(db);
             return RedirectToAction("MainMenu", "", m);
         }
 
 
-
         public ActionResult MainMenu(MainMenuModel model)
         {
-            var dict = db.GetAccounts().ToDictionary(g => g.ID, g => g.Name);
-            var AccountNames = new SelectList(dict, "key", "value");
-            ViewBag.data = AccountNames;
+            ViewBag.data = AccountNamesSelectList(db);
             return View("MainMenu", "", model);
         }
 
@@ -57,37 +68,28 @@ namespace Bank.Controllers
         [HttpPost]
         public ActionResult ListAccounts(MainMenuModel model)
         {
-            IList<Account> accounts = db.GetAccounts();
-            var found = accounts.Where(a => a.User_ID == model.UserID).ToList();
-            return View("ListAccounts", found);
+            return View("ListAccounts", AccountsByUser(model.UserID));
         }
 
 
         [HttpPost]
         public ActionResult ListBalances(MainMenuModel model)
         {
-            IList<Account> accounts = db.GetAccounts();
-            var found = accounts.Where(a => a.User_ID == model.UserID).ToList();
-            return View("ListBalances", found);
+            return View("ListBalances", AccountsByUser(model.UserID));
         }
 
 
         [HttpPost]
         public ActionResult ListBalance(MainMenuModel model)
         {
-            IList<Account> accounts = db.GetAccounts();
-            var found =
-                accounts.Where(a => a.ID == model.SelectedAccount).Single();
-            return View("ListBalance", found);
+            return View("ListBalance", AccountById(db, model.SelectedAccount));
         }
 
 
         [HttpPost]
         public ActionResult ListTransactions(MainMenuModel model)
         {
-            IList<Account> accounts = db.GetAccounts();
-            Account account  =
-                accounts.Where(a => a.ID == model.SelectedAccount).Single();
+            var account = AccountById(db, model.SelectedAccount);
             return View("ListTransactions", account.Transactions);
         }
 
@@ -95,14 +97,11 @@ namespace Bank.Controllers
         [HttpPost]
         public ActionResult AddMoney(MainMenuModel model)
         {
-            IList<Account> accounts = db.GetAccounts();
-            var account =
-                accounts.Where(a => a.ID == model.SelectedAccount).Single();
             Transaction t = new Transaction();
-            t.From = accounts[0];
-            t.To = account;
+            t.From = AccountById(db, 1);
+            t.To =  AccountById(db, model.SelectedAccount);
             t.Amount = model.Amount;
-            t.Note = "Manual insert";
+            t.Note = "Web insert";
             db.GetTransactions().Add(t);
             return RedirectToAction("MainMenu", model);
         }
@@ -111,12 +110,9 @@ namespace Bank.Controllers
         [HttpPost]
         public ActionResult Withdraw(MainMenuModel model)
         {
-            IList<Account> accounts = db.GetAccounts();
-            var account =
-                accounts.Where(a => a.ID == model.SelectedAccount).Single();
             Transaction t = new Transaction();
-            t.From = account;
-            t.To = accounts[0];
+            t.From = AccountById(db, model.SelectedAccount);
+            t.To = AccountById(db, 1);
             t.Amount = model.Amount;
             t.Note = "Manual withdrawal";
             db.GetTransactions().Add(t);
@@ -128,10 +124,8 @@ namespace Bank.Controllers
         public ActionResult Transfer(MainMenuModel model)
         {
             Transaction t = new Transaction();
-            t.To =
-                db.GetAccounts().Where(a => a.ID == model.ToAccount).Single();
-            t.From =
-                db.GetAccounts().Where(a => a.ID == model.FromAccount).Single();
+            t.To = AccountById(db, model.ToAccount);
+            t.From = AccountById(db, model.FromAccount);
             t.Amount = model.Amount;
             t.Note = "Web Transfer";
             db.GetTransactions().Add(t);
@@ -142,9 +136,7 @@ namespace Bank.Controllers
         [HttpPost]
         public ActionResult Lock(MainMenuModel model)
         {
-            IList<Account> accounts = db.GetAccounts();
-            var found = accounts.Where(a => a.ID == model.SelectedAccount).Single();
-            found.Locked = true;
+            AccountById(db, model.SelectedAccount).Locked = true;
             return RedirectToAction("MainMenu", model);
         }
 

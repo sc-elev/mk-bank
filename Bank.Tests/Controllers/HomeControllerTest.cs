@@ -21,6 +21,7 @@ namespace Bank.Tests.Controllers
                 .Single();
         }
 
+
         protected MainMenuModel BuildMainMenuModel(int ID = 1,
                                                     string Name = "Orvar Slusk")
         {
