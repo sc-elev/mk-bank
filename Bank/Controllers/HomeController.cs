@@ -30,6 +30,20 @@ namespace Bank.Controllers
             return new SelectList(dict, "key", "value");
         }
 
+        protected ActionResult
+            transfer(int from, int to, int amount, string note = "Web transfer")
+        {
+            if (to == from)
+                return RedirectToAction("BadTransfer");
+            Transaction t = new Transaction();
+            t.To = AccountById(db, to);
+            t.From = AccountById(db, from);
+            t.Amount = amount;
+            t.Note = note;
+            db.GetTransactions().Add(t);
+            return null;
+        }
+
         public ActionResult Index()
         {
             var model = new HomeViewModel();
@@ -98,40 +112,27 @@ namespace Bank.Controllers
         public ActionResult AddMoney(MainMenuModel model)
         {
             Transaction t = new Transaction();
-            t.From = AccountById(db, 1);
-            t.To =  AccountById(db, model.SelectedAccount);
-            t.Amount = model.Amount;
-            t.Note = "Web insert";
-            db.GetTransactions().Add(t);
-            return RedirectToAction("MainMenu", model);
+            ActionResult r = transfer(1, model.SelectedAccount, model.Amount);
+            return r != null ? r :  RedirectToAction("MainMenu", model);
         }
 
 
         [HttpPost]
         public ActionResult Withdraw(MainMenuModel model)
         {
-            Transaction t = new Transaction();
-            t.From = AccountById(db, model.SelectedAccount);
-            if (t.From.Locked)
+            if (AccountById(db, model.SelectedAccount).Locked)
                 return RedirectToAction("BadWithdraw");
-            t.To = AccountById(db, 1);
-            t.Amount = model.Amount;
-            t.Note = "Manual withdrawal";
-            db.GetTransactions().Add(t);
-            return RedirectToAction("MainMenu", model);
+            ActionResult r = transfer(model.SelectedAccount, 1, model.Amount);
+            return r != null ? r : RedirectToAction("MainMenu", model);
         }
 
 
         [HttpPost]
         public ActionResult Transfer(MainMenuModel model)
         {
-            Transaction t = new Transaction();
-            t.To = AccountById(db, model.ToAccount);
-            t.From = AccountById(db, model.FromAccount);
-            t.Amount = model.Amount;
-            t.Note = "Web Transfer";
-            db.GetTransactions().Add(t);
-            return RedirectToAction("MainMenu", model);
+            ActionResult r =
+                transfer(model.FromAccount, model.ToAccount, model.Amount);
+            return r != null ? r : RedirectToAction("MainMenu", model);
         }
 
 

@@ -225,8 +225,9 @@ namespace Bank.Tests.Controllers
             AccountById(db, model.SelectedAccount).Locked = true;
 
             var result = controller.Withdraw(model) as RedirectToRouteResult;
-
-            Assert.AreEqual("BadWithdraw",result.RouteName);
+            var values =
+                result.RouteValues.ToDictionary(g => g.Key, g => g.Value);
+            Assert.AreEqual("BadWithdraw", values["action"]);
         }
 
 
