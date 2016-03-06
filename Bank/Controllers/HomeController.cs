@@ -112,6 +112,8 @@ namespace Bank.Controllers
         {
             Transaction t = new Transaction();
             t.From = AccountById(db, model.SelectedAccount);
+            if (t.From.Locked)
+                return RedirectToRoute("BadWithdraw");
             t.To = AccountById(db, 1);
             t.Amount = model.Amount;
             t.Note = "Manual withdrawal";
@@ -138,6 +140,12 @@ namespace Bank.Controllers
         {
             AccountById(db, model.SelectedAccount).Locked = true;
             return RedirectToAction("MainMenu", model);
+        }
+
+
+        public ActionResult BadWithdraw()
+        {
+            return View();
         }
 
 
