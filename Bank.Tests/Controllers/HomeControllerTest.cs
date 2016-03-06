@@ -213,6 +213,24 @@ namespace Bank.Tests.Controllers
             Assert.AreEqual(before - 12, after);
         }
 
+        [TestMethod]
+        public void TestLockedWithdraw()
+        // List all acounts  and their balance for given user.
+        {
+            var db = new DatabaseMockup();
+            var controller = new HomeController(db);
+            var model = BuildMainMenuModel();
+            model.SelectedAccount = 4;
+            model.Amount = 12;
+            AccountById(db, model.SelectedAccount).Locked = true;
+
+            var result = controller.Withdraw(model) as RedirectToRouteResult;
+            var values =
+                result.RouteValues.ToDictionary(g => g.Key, g => g.Value);
+
+            Assert.AreEqual("BadWithdraw", values["action"]);
+        }
+
 
         [TestMethod]
         public void TestTransfer()
