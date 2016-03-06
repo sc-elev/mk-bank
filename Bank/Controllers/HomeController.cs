@@ -113,7 +113,7 @@ namespace Bank.Controllers
             Transaction t = new Transaction();
             t.From = AccountById(db, model.SelectedAccount);
             if (t.From.Locked)
-                return RedirectToRoute("BadWithdraw");
+                return RedirectToAction("BadWithdraw");
             t.To = AccountById(db, 1);
             t.Amount = model.Amount;
             t.Note = "Manual withdrawal";
