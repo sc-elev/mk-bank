@@ -7,6 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Bank.Controllers;
 using Bank.Database;
 using Bank.Models;
+using Moq;
 
 namespace Bank.Tests.Controllers
 {
@@ -16,7 +17,7 @@ namespace Bank.Tests.Controllers
 
         protected Account AccountById(IBankDbContext db, int ID)
         {
-            return  db.GetAccounts()
+            return db.GetAccounts()
                 .Where(a => a.ID == ID)
                 .Single();
         }
@@ -213,23 +214,6 @@ namespace Bank.Tests.Controllers
             Assert.AreEqual(before - 12, after);
         }
 
-        [TestMethod]
-        public void TestLockedWithdraw()
-        // List all acounts  and their balance for given user.
-        {
-            var db = new DatabaseMockup();
-            var controller = new HomeController(db);
-            var model = BuildMainMenuModel();
-            model.SelectedAccount = 4;
-            model.Amount = 12;
-            AccountById(db, model.SelectedAccount).Locked = true;
-
-            var result = controller.Withdraw(model) as RedirectToRouteResult;
-            var values =
-                result.RouteValues.ToDictionary(g => g.Key, g => g.Value);
-            Assert.AreEqual("BadWithdraw", values["action"]);
-        }
-
 
         [TestMethod]
         public void TestTransfer()
@@ -268,6 +252,86 @@ namespace Bank.Tests.Controllers
             Assert.AreEqual("", result.RouteName);
             var account = db.GetAccounts().Where(a => a.ID == 1).Single();
             Assert.IsTrue(account.Locked);
+        }
+    }
+
+
+    [TestClass]
+    public class MockHomeControllerTests:  HomeControllerTest
+    {
+
+        [TestMethod]
+        public void MockTestLock()
+        // Test "Lock for Withdrawal" function
+        {
+            var account = new Account { ID = 1, Locked = false };
+            var dbMock = new Mock<IBankDbContext>();
+            dbMock
+                .Setup(p => p.GetAccounts())
+                .Returns(new List<Account> { account });
+            var controller = new HomeController(dbMock.Object);
+            var model = new MainMenuModel();
+            model.UserID = 1;
+            model.UserName = "Orvar Slusk";
+            model.SelectedAccount = 1;
+
+            var result = controller.Lock(model) as RedirectToRouteResult;
+
+            Assert.AreEqual("", result.RouteName);
+            Assert.IsTrue(account.Locked);
+        }
+
+
+        [TestMethod]
+        public void TestLockedWithdraw()
+        // List all acounts  and their balance for given user.
+        {
+            var account = new Account { ID = 4, Locked = true };
+            var dbMock = new Mock<IBankDbContext>();
+            dbMock
+                .Setup(p => p.GetAccounts())
+                .Returns(new List<Account> { account });
+            var controller = new HomeController(dbMock.Object);
+            var model = BuildMainMenuModel();
+            model.SelectedAccount = 4;
+            model.Amount = 12;
+
+            var result = controller.Withdraw(model) as RedirectToRouteResult;
+            var values =
+                result.RouteValues.ToDictionary(g => g.Key, g => g.Value);
+
+            Assert.AreEqual("BadWithdraw", values["action"]);
+        }
+
+
+        [TestMethod]
+        public void MockTestTransfer()
+        // Transfer amount between two accounts.
+        {
+            var dbMock = new Mock<IBankDbContext>();
+            var transactions = new List<Transaction>();
+            dbMock
+                .Setup(p => p.GetTransactions())
+                .Returns(transactions);
+            var accounts = new List<Account> {
+                new Account { ID = 1 },
+                new Account { ID = 4 }
+            };
+            dbMock
+                .Setup(p => p.GetAccounts())
+                .Returns(accounts);
+            var controller = new HomeController(dbMock.Object);
+            var model = BuildMainMenuModel();
+            model.FromAccount = 1;
+            model.ToAccount = 4;
+            model.Amount = 12;
+
+            var result = controller.Transfer(model) as RedirectToRouteResult;
+
+            Assert.AreEqual(1, transactions.Count);
+            Assert.AreEqual(1, transactions[0].From.ID);
+            Assert.AreEqual(4, transactions[0].To.ID);
+            Assert.AreEqual(12, transactions[0].Amount);
         }
     }
 }

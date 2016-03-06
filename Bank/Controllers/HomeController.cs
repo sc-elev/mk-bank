@@ -16,6 +16,7 @@ namespace Bank.Controllers
 
         protected Account AccountById(IBankDbContext db, int ID)
         {
+            var all = db.GetAccounts();
             return db.GetAccounts().Where(a => a.ID == ID).Single();
         }
 
