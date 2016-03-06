@@ -31,7 +31,7 @@ namespace Bank.Controllers
         }
 
         protected ActionResult
-            transfer(int from, int to, int amount, string note = "Web transfer")
+            Transfer(int from, int to, int amount, string note = "Web transfer")
         {
             if (to == from)
                 return RedirectToAction("BadTransfer");
@@ -111,8 +111,7 @@ namespace Bank.Controllers
         [HttpPost]
         public ActionResult AddMoney(MainMenuModel model)
         {
-            Transaction t = new Transaction();
-            ActionResult r = transfer(1, model.SelectedAccount, model.Amount);
+            ActionResult r = Transfer(1, model.SelectedAccount, model.Amount);
             return r != null ? r :  RedirectToAction("MainMenu", model);
         }
 
@@ -122,7 +121,7 @@ namespace Bank.Controllers
         {
             if (AccountById(db, model.SelectedAccount).Locked)
                 return RedirectToAction("BadWithdraw");
-            ActionResult r = transfer(model.SelectedAccount, 1, model.Amount);
+            ActionResult r = Transfer(model.SelectedAccount, 1, model.Amount);
             return r != null ? r : RedirectToAction("MainMenu", model);
         }
 
@@ -131,7 +130,7 @@ namespace Bank.Controllers
         public ActionResult Transfer(MainMenuModel model)
         {
             ActionResult r =
-                transfer(model.FromAccount, model.ToAccount, model.Amount);
+                Transfer(model.FromAccount, model.ToAccount, model.Amount);
             return r != null ? r : RedirectToAction("MainMenu", model);
         }
 
