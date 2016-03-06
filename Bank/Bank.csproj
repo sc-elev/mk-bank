@@ -243,6 +243,7 @@
     <Content Include="Views\Home\ListBalance.cshtml" />
     <Content Include="Views\Home\ListTransactions.cshtml" />
     <Content Include="Views\Home\BadWithdraw.cshtml" />
+    <Content Include="Views\Home\BadTransfer.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
