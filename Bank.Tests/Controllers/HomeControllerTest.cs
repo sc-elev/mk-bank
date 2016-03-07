@@ -3,15 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+//using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Bank.Controllers;
 using Bank.Database;
 using Bank.Models;
 using Moq;
+using NUnit.Framework;
+
 
 namespace Bank.Tests.Controllers
 {
-    [TestClass]
+
+    [TestFixture]
     public class HomeControllerTest
     {
 
@@ -33,7 +36,7 @@ namespace Bank.Tests.Controllers
         }
 
 
-        [TestMethod]
+        [Test]
         public void Index()
         {
             // Arrange
@@ -48,7 +51,7 @@ namespace Bank.Tests.Controllers
         }
 
 
-        [TestMethod]
+        [Test]
         public void About()
         {
             // Arrange
@@ -64,7 +67,7 @@ namespace Bank.Tests.Controllers
         }
 
 
-        [TestMethod]
+        [Test]
         public void Contact()
         {
             // Arrange
@@ -79,7 +82,7 @@ namespace Bank.Tests.Controllers
         }
 
 
-        [TestMethod]
+        [Test]
         public void TestIndex()
         // Index invoked without username: return to /index page with set Model
         {
@@ -93,7 +96,7 @@ namespace Bank.Tests.Controllers
         }
 
 
-        [TestMethod]
+        [Test]
         public void TestIndexWithName0()
         // Index invoked with username == 0:  return to /index page.
         {
@@ -108,7 +111,7 @@ namespace Bank.Tests.Controllers
         }
 
 
-        [TestMethod]
+        [Test]
         public void TestIndexWithUser()
         // Index called with user: invoke MainMenu with UserName set.
         {
@@ -127,7 +130,7 @@ namespace Bank.Tests.Controllers
         }
 
 
-        [TestMethod]
+        [Test]
         public void TestListAccounts()
         // List all acounts for given user.
         {
@@ -144,7 +147,7 @@ namespace Bank.Tests.Controllers
         }
 
 
-        [TestMethod]
+        [Test]
         public void TestListBalances()
         // List all acounts  and their balance for given user.
         {
@@ -161,7 +164,7 @@ namespace Bank.Tests.Controllers
         }
 
 
-        [TestMethod]
+        [Test]
         public void TestAddMoney()
         // List all acounts  and their balance for given user.
         {
@@ -180,7 +183,7 @@ namespace Bank.Tests.Controllers
         }
 
 
-        [TestMethod]
+        [Test]
         public void TestListTransactions()
         // List all transactions for given account.
         {
@@ -196,7 +199,7 @@ namespace Bank.Tests.Controllers
         }
 
 
-        [TestMethod]
+        [Test]
         public void TestWithdraw()
         // List all acounts  and their balance for given user.
         {
@@ -215,7 +218,7 @@ namespace Bank.Tests.Controllers
         }
 
 
-        [TestMethod]
+        [Test]
         public void TestTransfer()
         // Transfer amount between two accounts.
         {
@@ -236,7 +239,7 @@ namespace Bank.Tests.Controllers
         }
 
 
-        [TestMethod]
+        [Test]
         public void TestLock()
         // Test "Lock for Withdrawal" function
         {
@@ -256,11 +259,11 @@ namespace Bank.Tests.Controllers
     }
 
 
-    [TestClass]
+    [TestFixture]
     public class MockHomeControllerTests:  HomeControllerTest
     {
 
-        [TestMethod]
+        [Test]
         public void MockTestLock()
         // Test "Lock for Withdrawal" function
         {
@@ -282,8 +285,8 @@ namespace Bank.Tests.Controllers
         }
 
 
-        [TestMethod]
-        public void TestLockedWithdraw()
+        [Test]
+        public void MockTestLockedWithdraw()
         // List all acounts  and their balance for given user.
         {
             var account = new Account { ID = 4, Locked = true };
@@ -304,7 +307,7 @@ namespace Bank.Tests.Controllers
         }
 
 
-        [TestMethod]
+        [Test]
         public void MockTestTransfer()
         // Transfer amount between two accounts.
         {

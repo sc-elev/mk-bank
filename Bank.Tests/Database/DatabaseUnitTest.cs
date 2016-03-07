@@ -2,13 +2,13 @@
 using System.Text;
 using System.Linq;
 using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Bank.Database;
+using NUnit.Framework;
 
 namespace Bank.Tests.Database
 {
 
-    [TestClass]
+    [TestFixture]
     public class DatabaseUnitTest
     {
         public DatabaseUnitTest()
@@ -55,19 +55,19 @@ namespace Bank.Tests.Database
         //
         #endregion
 
-        [TestMethod]
+        [Test]
         public void TestUserList()
         {
             Assert.AreEqual(2, new DatabaseMockup().GetUsers().Count());
         }
 
-        [TestMethod]
+        [Test]
         public void TestAccountList()
         {
             Assert.AreEqual(8, new DatabaseMockup().GetAccounts().Count());
         }
 
-        [TestMethod]
+        [Test]
         public void TestTransactionList()
         {
             Assert.AreEqual(8, new DatabaseMockup().GetTransactions().Count());
