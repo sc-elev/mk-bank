@@ -11,14 +11,14 @@
 {
     @Html.Hidden("UserName")
     @Html.Hidden("UserID")
-    <input type='submit' value='List Accounts' />
+    <input type='submit' value='List Accounts' id="ListAccounts"/>
 }
 
 @using (Html.BeginForm("ListBalances", "Home"))
 {
     @Html.Hidden("UserName")
     @Html.Hidden("UserID")
-    <input type='submit' value='List All Balances' />
+    <input type='submit' value='List All Balances'  id="ListBalances"/>
 }
 
 
@@ -26,8 +26,8 @@
 {
     @Html.Hidden("UserName")
     @Html.Hidden("UserID")
-    @Html.DropDownList("SelectedAccount", (SelectList)ViewBag.data)
-    <input type='submit' value='Show Balance' />
+    @Html.DropDownList("SelectedAccount", (SelectList)ViewBag.data, new { id = "BalanceAccount" })
+    <input type='submit' value='Show Balance' id="ShowBalance"/>
 }
 
 
@@ -36,7 +36,7 @@
     @Html.Hidden("UserName")
     @Html.Hidden("UserID")
     @Html.DropDownList("SelectedAccount", (SelectList)ViewBag.data)
-    <input type='submit' value='ListTransactions' />
+    <input type='submit' value='ListTransactions' id="ListTransactions"/>
 }
 
 
@@ -48,13 +48,13 @@
     <table>
         <tr>
             <td>
-                @Html.DropDownList("SelectedAccount", (SelectList)ViewBag.data)
+                @Html.DropDownList("SelectedAccount", (SelectList)ViewBag.data )
             </td>
             <td>  Amount: </td>
             <td>
-                <input type="number" id="Amount" name="Amount" value="0" />
+                <input type="number" id="AddAmount" name="Amount" value="0" />
             </td>
-            <td> <input type='submit' value='Add Money' /> </td>
+            <td> <input type='submit' value='Add Money' id="AddMoney"/> </td>
         </tr>
     </table>
 }
@@ -66,15 +66,17 @@
     <table>
         <tr>
             <td>
-                @Html.DropDownList("SelectedAccount", (SelectList)ViewBag.data);
+                @Html.DropDownList("SelectedAccount", 
+                                   (SelectList)ViewBag.data, 
+                                   new { id = "WithdrawAccount" });
             </td>
             <td>
                 Amount:
             </td>
             <td>
-                <input type="number" id="Amount" name="Amount" value="0" />
+                <input type="number" id="WithdrawAmount" name="Amount" value="0" />
             </td>
-            <td> <input type='submit' value='Withdraw' /> </td>
+            <td> <input type='submit' value='Withdraw' id="Withdraw"/> </td>
         </tr>
     </table>
 }
@@ -96,7 +98,7 @@
             <td>
                 @Html.DropDownList("ToAccount", (SelectList)ViewBag.data);
             </td>
-            <td> <input type='submit' value='Transfer' /> </td>
+            <td> <input type='submit' value='Transfer' id="Transfer"/> </td>
         </tr>
     </table>
 }
@@ -109,7 +111,7 @@
             <td>
                 @Html.DropDownList("SelectedAccount", (SelectList)ViewBag.data)
             </td>
-            <td>  <input type='submit' value='Lock' /> </td>
+            <td>  <input type='submit' value='Lock' id="lock"/> </td>
         </tr>
     </table>
 }
