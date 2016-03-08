@@ -5,4 +5,5 @@ packages/OpenCover.4.6.519/tools/OpenCover.Console.exe \
     -targetargs:Bank.Tests/Bank.Tests.csproj
 packages/ReportGenerator.2.4.4.0/tools/ReportGenerator.exe \
     -reports:results.xml  \
-    -targetdir:test-reports
+    -targetdir:test-reports \
+    -sourcedirs:Bank/Controllers;Bank/Models
